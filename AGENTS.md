@@ -1,52 +1,119 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
-This repository is currently documentation-first. The tracked files are `README.md` and CI workflow files under `.github/workflows/`.
+## Project Status
+This repository is currently in a documentation-first stage.
 
-The intended project layout is defined in `README.md`:
-- `spec/` — TypeSpec API contract and generated API description.
-- `apps/frontend/` — client application.
-- `apps/backend/` — server application.
+The system behavior is defined by the API contract in `spec/`.  
+`README.md` provides a human-readable description of the system but is not the source of truth.
 
-Keep new code aligned with that structure. Put contract changes in `spec/` first, then update frontend and backend code against the revised contract.
+The intended layout is:
 
-## Build, Test, and Development Commands
-There is no local build pipeline checked in yet. Use the repository’s current commands and keep additions documented in `README.md`.
+- `spec/` — TypeSpec API contract and generated API description
+- `apps/frontend/` — client application
+- `apps/backend/` — server application
 
-Examples:
-- `git status` — verify the working tree before committing.
-- `git log --oneline` — review recent commit style.
-- `sed -n '1,200p' README.md` — inspect the current architecture notes.
+Do not assume those directories already exist. Create only the minimum required structure for the current task.
 
-CI runs through GitHub Actions on every push via `.github/workflows/hexlet-check.yml`. Do not rename, delete, or edit that workflow unless the project requirements explicitly change.
+---
 
-## Coding Style & Naming Conventions
-Follow a design-first workflow: update the API contract before implementation. Use clear, lowercase directory names such as `spec`, `frontend`, and `backend`.
+## Core Development Rule (Design First)
 
-For Markdown:
-- use `#`-style headings
-- keep sections short and task-focused
-- prefer fenced code blocks for examples
+The API contract is the **single source of truth**.
 
-For future source files, match the formatter and linter chosen for that stack and document the commands near the tool config.
+If system behavior changes:
+1. update the contract in `spec/`
+2. then update backend and frontend implementations
 
-## Testing Guidelines
-Automated checks are currently provided by Hexlet CI, triggered on each push. There are no local test scripts committed yet.
+Do not introduce behavior in code that is not described in the contract.
+
+Recommended workflow:
+1. clarify behavior
+2. update contract (`spec/`)
+3. implement backend/frontend
+4. add/update tests
+5. update documentation if needed
+
+---
+
+## Product Constraints
+
+Preserve the following rules from `README.md` unless explicitly changed:
+
+- no registration or authentication
+- one fixed owner profile
+- anonymous guest booking
+- booking window is limited to 14 days
+- the same time slot cannot be booked twice (even across event types)
+
+Do not invent additional roles or flows.
+
+---
+
+## Repository Structure
+
+Keep new files aligned with the documented structure:
+
+- contract → `spec/`
+- frontend → `apps/frontend/`
+- backend → `apps/backend/`
+
+If a task requires new directories, introduce them explicitly and keep them consistent with `README.md`.
+
+---
+
+## Build, Test, and Development
+
+There is no fully defined local toolchain yet.
+
+Before suggesting commands, verify that required files exist.
+
+Useful basic commands:
+
+```bash
+git status
+git log --oneline
+sed -n '1,200p' README.md
+```
+
+If you introduce new tooling:
+
+* keep it minimal
+* document it in `README.md`
+
+---
+
+## Testing
+
+Currently, validation is performed via GitHub Actions on each push:
+
+* workflow: `.github/workflows/hexlet-check.yml`
+* trigger: every push
+
+There are no local test commands yet.
 
 When tests are added:
-- keep test files near the relevant app or under a dedicated `tests/` directory
-- name tests after the behavior they verify, for example `booking-slots.test.*`
-- document the exact local test command in `README.md`
+
+* place them near the relevant app or in `tests/`
+* name them after behavior (e.g., `booking-slots.test.*`)
+* document how to run them locally
+
+---
 
 ## Commit & Pull Request Guidelines
-Recent history uses short, imperative commit messages such as `Add README.md` and `Update README.md with detailed project description and API structure`.
 
-For contributions:
-- write concise imperative commit subjects
-- keep each commit scoped to one change
-- include a PR summary describing what changed and why
-- link the related issue or task when available
+- use concise, imperative commit messages, for example `Add booking API endpoint`
+- keep commits focused on a single change
+- include in each PR: what changed, why it changed, and the related issue or task if available
 - include screenshots only for UI changes
 
-## Agent-Specific Notes
-Preserve user changes in a dirty worktree. Avoid destructive Git commands. If you add tooling, tests, or app directories, update this guide and `README.md` in the same change.
+---
+
+## Change Safety
+
+* preserve user changes in a dirty worktree
+* avoid destructive Git commands
+* do not remove or rewrite files unless required
+
+When adding structure or tooling:
+
+* update both this file and `README.md` accordingly
