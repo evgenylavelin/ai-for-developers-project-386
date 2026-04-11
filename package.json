@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "type": "module",
   "private": true,
+  "scripts": {
+    "spec:compile": "tsp compile spec",
+    "spec:format": "tsp format \"spec/**/*.tsp\""
+  },
   "dependencies": {
     "@typespec/compiler": "latest",
     "@typespec/http": "latest",

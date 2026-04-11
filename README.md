@@ -107,7 +107,17 @@ API описывается с помощью **TypeSpec**:
 
 ## ▶️ Запуск
 
-TBD
+Сборка TypeSpec-контракта:
+
+```bash
+npm run spec:compile
+```
+
+Форматирование файлов контракта:
+
+```bash
+npm run spec:format
+```
 
 ---
 
