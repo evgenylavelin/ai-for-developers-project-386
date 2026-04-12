@@ -20,6 +20,23 @@ export type OwnerEventTypeForm = {
   durationMinutes: string;
 };
 
+export type DayOfWeek =
+  | "monday"
+  | "tuesday"
+  | "wednesday"
+  | "thursday"
+  | "friday"
+  | "saturday"
+  | "sunday";
+
+export type OwnerSchedule = {
+  workingDays: DayOfWeek[];
+  startTime: string;
+  endTime: string;
+};
+
+export type Workspace = "public" | "owner-event-types" | "owner-settings";
+
 export type ScheduleDay = {
   isoDate: string;
   weekdayShort: string;

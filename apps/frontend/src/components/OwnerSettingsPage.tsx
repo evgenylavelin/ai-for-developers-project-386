@@ -1,0 +1,276 @@
+import { useEffect, useState, type FormEvent } from "react";
+
+import { OwnerWorkspaceNav } from "./OwnerWorkspaceNav";
+import {
+  createEmptyOwnerSchedule,
+  toggleWorkingDay,
+  validateOwnerScheduleForm,
+  weekdayOptions,
+} from "../lib/ownerSchedule";
+import { getSchedule, updateSchedule } from "../lib/scheduleApi";
+import type { DayOfWeek, OwnerSchedule, Workspace } from "../types";
+
+type OwnerSettingsPageProps = {
+  workspace: Workspace;
+  onChangeWorkspace: (workspace: Workspace) => void;
+};
+
+function formatWorkingDays(workingDays: DayOfWeek[]): string {
+  if (workingDays.length === 0) {
+    return "Дни не выбраны";
+  }
+
+  return weekdayOptions
+    .filter((weekday) => workingDays.includes(weekday.value))
+    .map((weekday) => weekday.label)
+    .join(", ");
+}
+
+export function OwnerSettingsPage({
+  workspace,
+  onChangeWorkspace,
+}: OwnerSettingsPageProps) {
+  const [schedule, setSchedule] = useState<OwnerSchedule>(createEmptyOwnerSchedule());
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [loadError, setLoadError] = useState("");
+  const [formError, setFormError] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [reloadToken, setReloadToken] = useState(0);
+
+  useEffect(() => {
+    let alive = true;
+
+    async function loadSchedule() {
+      setLoading(true);
+      setLoadError("");
+
+      try {
+        const loadedSchedule = await getSchedule();
+
+        if (!alive) {
+          return;
+        }
+
+        setSchedule(loadedSchedule);
+        setFormError("");
+        setFeedback("");
+      } catch {
+        if (!alive) {
+          return;
+        }
+
+        setLoadError("Не удалось загрузить расписание.");
+      } finally {
+        if (alive) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadSchedule();
+
+    return () => {
+      alive = false;
+    };
+  }, [reloadToken]);
+
+  const handleDayToggle = (day: DayOfWeek) => {
+    if (saving) {
+      return;
+    }
+
+    setSchedule((currentSchedule) => toggleWorkingDay(currentSchedule, day));
+    setFormError("");
+    setFeedback("");
+  };
+
+  const handleTimeChange = (field: "startTime" | "endTime", value: string) => {
+    if (saving) {
+      return;
+    }
+
+    setSchedule((currentSchedule) => ({ ...currentSchedule, [field]: value }));
+    setFormError("");
+    setFeedback("");
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (saving || loading || loadError) {
+      return;
+    }
+
+    const validationError = validateOwnerScheduleForm(schedule);
+
+    if (validationError) {
+      setFormError(validationError);
+      setFeedback("");
+      return;
+    }
+
+    setSaving(true);
+    setFormError("");
+    setFeedback("");
+
+    try {
+      const savedSchedule = await updateSchedule(schedule);
+      setSchedule(savedSchedule);
+      setFeedback("Расписание сохранено.");
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : "Не удалось сохранить расписание.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <section className="owner-workspace">
+      <header className="owner-hero">
+        <div className="hero-header">
+          <div>
+            <p className="eyebrow">Owner Workspace</p>
+            <h1>Рабочее расписание</h1>
+            <p className="panel-copy owner-hero__copy">
+              Настройте рабочие дни и единое время приема, чтобы публичные слоты строились по
+              одному графику.
+            </p>
+          </div>
+
+          <OwnerWorkspaceNav
+            workspace={workspace}
+            onChangeWorkspace={onChangeWorkspace}
+            className="workspace-nav--embedded"
+          />
+        </div>
+
+        <div className="owner-hero__meta">
+          <span className="owner-kpi">
+            <strong>{schedule.workingDays.length}</strong>
+            <span>рабочих дней</span>
+          </span>
+          <span className="owner-kpi">
+            <strong>{schedule.startTime && schedule.endTime ? `${schedule.startTime}–${schedule.endTime}` : "—"}</strong>
+            <span>единый интервал</span>
+          </span>
+        </div>
+      </header>
+
+      <div className="owner-settings-layout">
+        <section className="owner-card owner-settings-panel" aria-labelledby="owner-schedule-title">
+          <div className="owner-list-panel__header">
+            <div>
+              <p className="bookings-card__eyebrow">Настройки</p>
+              <h2 id="owner-schedule-title">Рабочие дни и время</h2>
+            </div>
+          </div>
+
+          {loading ? (
+            <p className="empty-copy">Загружаем расписание...</p>
+          ) : null}
+
+          {loadError ? (
+            <p className="error-copy" role="alert">
+              {loadError}
+            </p>
+          ) : null}
+
+          {!loading && !loadError ? (
+            <form className="owner-schedule-form" onSubmit={handleSubmit}>
+              <div className="stack owner-form-fields">
+                <fieldset className="owner-weekday-fieldset">
+                  <legend>Рабочие дни</legend>
+                  <div className="owner-weekday-grid">
+                    {weekdayOptions.map((weekday) => {
+                      const selected = schedule.workingDays.includes(weekday.value);
+
+                      return (
+                        <button
+                          key={weekday.value}
+                          type="button"
+                          className={`owner-weekday-toggle${selected ? " owner-weekday-toggle--active" : ""}`}
+                          aria-pressed={selected}
+                          aria-label={weekday.label}
+                          disabled={saving}
+                          onClick={() => handleDayToggle(weekday.value)}
+                        >
+                          <span className="owner-weekday-toggle__short">{weekday.shortLabel}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </fieldset>
+
+                <div className="owner-time-grid">
+                  <label className="field">
+                    <span>Начало</span>
+                    <input
+                      type="time"
+                      value={schedule.startTime}
+                      disabled={saving}
+                      onChange={(event) => handleTimeChange("startTime", event.target.value)}
+                    />
+                  </label>
+
+                  <label className="field">
+                    <span>Окончание</span>
+                    <input
+                      type="time"
+                      value={schedule.endTime}
+                      disabled={saving}
+                      onChange={(event) => handleTimeChange("endTime", event.target.value)}
+                    />
+                  </label>
+                </div>
+
+                <div className="owner-schedule-summary" aria-label="Текущее расписание">
+                  <p className="owner-schedule-summary__label">Выбрано</p>
+                  <p className="owner-schedule-summary__value">
+                    {formatWorkingDays(schedule.workingDays)}
+                  </p>
+                </div>
+              </div>
+
+              {formError ? (
+                <p
+                  id="owner-schedule-form-error"
+                  className="error-copy"
+                  role="alert"
+                  aria-live="assertive"
+                  aria-atomic="true"
+                >
+                  {formError}
+                </p>
+              ) : null}
+
+              {feedback ? (
+                <p className="owner-feedback" role="status" aria-live="polite" aria-atomic="true">
+                  {feedback}
+                </p>
+              ) : null}
+
+              <div className="owner-form-actions">
+                <button type="submit" className="primary-button" disabled={saving}>
+                  {saving ? "Сохраняем..." : "Сохранить"}
+                </button>
+              </div>
+            </form>
+          ) : null}
+
+          {!loading && loadError ? (
+            <div className="owner-form-actions">
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={() => setReloadToken((currentToken) => currentToken + 1)}
+              >
+                Повторить загрузку
+              </button>
+            </div>
+          ) : null}
+        </section>
+      </div>
+    </section>
+  );
+}

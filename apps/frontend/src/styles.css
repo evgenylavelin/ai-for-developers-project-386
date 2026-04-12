@@ -52,7 +52,7 @@ select {
   width: min(100%, 1240px);
   margin: 0 auto;
   display: grid;
-  gap: 18px;
+  gap: 0;
 }
 
 .workspace-nav {
@@ -725,12 +725,19 @@ h1 {
   gap: 20px;
 }
 
+.owner-settings-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+
 .owner-card {
   padding: 24px;
 }
 
 .owner-list-panel,
-.owner-form-panel {
+.owner-form-panel,
+.owner-settings-panel {
   display: grid;
   align-content: start;
   gap: 18px;
@@ -863,6 +870,93 @@ h1 {
 
 .owner-form-fields {
   margin-top: 0;
+}
+
+.owner-schedule-form {
+  display: grid;
+  gap: 16px;
+}
+
+.owner-weekday-fieldset {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.owner-weekday-fieldset legend {
+  margin: 0 0 10px;
+  padding: 0;
+  font-size: 0.95rem;
+  color: #4a5846;
+}
+
+.owner-weekday-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(92px, 92px));
+  gap: 10px;
+  justify-content: start;
+}
+
+.owner-weekday-toggle {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1;
+  min-height: 92px;
+  padding: 0;
+  border: 1px solid rgba(24, 33, 23, 0.08);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(242, 245, 238, 0.92));
+  color: #182117;
+  text-align: center;
+  cursor: pointer;
+}
+
+.owner-weekday-toggle--active {
+  border-color: rgba(24, 33, 23, 0.36);
+  background:
+    radial-gradient(circle at top right, rgba(209, 153, 91, 0.16), transparent 38%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(240, 236, 229, 0.94));
+}
+
+.owner-weekday-toggle__short {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(24, 33, 23, 0.72);
+}
+
+.owner-time-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.owner-schedule-summary {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid rgba(24, 33, 23, 0.08);
+  border-radius: 18px;
+  background: rgba(248, 245, 240, 0.72);
+}
+
+.owner-schedule-summary__label {
+  margin: 0;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(24, 33, 23, 0.56);
+}
+
+.owner-schedule-summary__value {
+  margin: 0;
+  color: rgba(24, 33, 23, 0.8);
+  line-height: 1.5;
 }
 
 .owner-form-actions {
@@ -1046,8 +1140,16 @@ h1 {
     grid-template-columns: 1fr;
   }
 
+  .owner-settings-layout {
+    grid-template-columns: 1fr;
+  }
+
   .owner-hero {
     grid-template-columns: 1fr;
     display: grid;
+  }
+
+  .owner-time-grid {
+    grid-template-columns: 1fr;
   }
 }

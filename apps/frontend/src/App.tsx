@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { GuestBookingPage } from "./components/GuestBookingPage";
 import { OwnerEventTypesPage } from "./components/OwnerEventTypesPage";
+import { OwnerSettingsPage } from "./components/OwnerSettingsPage";
 import { PublicBookingsHome } from "./components/PublicBookingsHome";
 import {
   bookingSchedule,
@@ -17,7 +18,7 @@ import {
   createMockBooking,
   getInitialSelectedDate,
 } from "./lib/publicBookings";
-import type { Booking, EventType, ScheduleDay } from "./types";
+import type { Booking, EventType, ScheduleDay, Workspace } from "./types";
 
 type AppProps = {
   scenario?: "none" | "single" | "multi" | "public";
@@ -63,7 +64,7 @@ function getScenarioData(scenario: NonNullable<AppProps["scenario"]>): ScenarioD
 
 export default function App({ scenario = "public" }: AppProps) {
   const scenarioData = getScenarioData(scenario);
-  const [workspace, setWorkspace] = useState<"public" | "owner">("public");
+  const [workspace, setWorkspace] = useState<Workspace>("public");
   const [bookings, setBookings] = useState(scenarioData.bookings);
   const [screen, setScreen] = useState<"home" | "booking">(
     scenarioData.bookings.length > 0 ? "home" : "booking",
@@ -91,7 +92,7 @@ export default function App({ scenario = "public" }: AppProps) {
     bookings,
   );
 
-  const handleWorkspaceChange = (nextWorkspace: "public" | "owner") => {
+  const handleWorkspaceChange = (nextWorkspace: Workspace) => {
     setWorkspace(nextWorkspace);
   };
 
@@ -108,7 +109,7 @@ export default function App({ scenario = "public" }: AppProps) {
                 eventTypes={scenarioData.eventTypes}
                 initialSelectedDate={selectedHomeDate}
                 schedule={scenarioData.schedule}
-                workspace={workspace}
+                workspace="public"
                 onChangeWorkspace={handleWorkspaceChange}
                 onCancelBooking={(bookingId) => {
                   setBookings((currentBookings) => cancelPublicBooking(currentBookings, bookingId));
@@ -142,10 +143,16 @@ export default function App({ scenario = "public" }: AppProps) {
                 }
               />
             )
-          ) : (
+          ) : workspace === "owner-event-types" ? (
             <OwnerEventTypesPage
               key={scenario}
               initialEventTypes={mockOwnerEventTypes}
+              workspace={workspace}
+              onChangeWorkspace={handleWorkspaceChange}
+            />
+          ) : (
+            <OwnerSettingsPage
+              key={scenario}
               workspace={workspace}
               onChangeWorkspace={handleWorkspaceChange}
             />

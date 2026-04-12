@@ -8,7 +8,10 @@
     "spec:format": "tsp format \"spec/**/*.tsp\"",
     "frontend:dev": "npm --prefix apps/frontend run dev",
     "frontend:build": "npm --prefix apps/frontend run build",
-    "frontend:test": "npm --prefix apps/frontend run test --"
+    "frontend:test": "npm --prefix apps/frontend run test --",
+    "backend:dev": "npm --prefix apps/backend run dev",
+    "backend:build": "npm --prefix apps/backend run build",
+    "backend:test": "npm --prefix apps/backend run test --"
   },
   "dependencies": {
     "@typespec/compiler": "latest",

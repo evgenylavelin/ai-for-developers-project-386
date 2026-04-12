@@ -8,12 +8,13 @@ import {
   saveOwnerEventType,
   validateOwnerEventTypeForm,
 } from "../lib/ownerEventTypes";
-import type { OwnerEventType, OwnerEventTypeForm } from "../types";
+import type { OwnerEventType, OwnerEventTypeForm, Workspace } from "../types";
+import { OwnerWorkspaceNav } from "./OwnerWorkspaceNav";
 
 type OwnerEventTypesPageProps = {
   initialEventTypes: OwnerEventType[];
-  workspace: "public" | "owner";
-  onChangeWorkspace: (workspace: "public" | "owner") => void;
+  workspace: Workspace;
+  onChangeWorkspace: (workspace: Workspace) => void;
 };
 
 type PendingAction = "delete" | "archive" | null;
@@ -233,25 +234,11 @@ export function OwnerEventTypesPage({
                 работает только в mock-состоянии внутри frontend-приложения.
               </p>
             </div>
-
-            <nav className="workspace-nav workspace-nav--embedded" aria-label="Разделы приложения">
-              <button
-                type="button"
-                className={`workspace-nav__link${workspace === "public" ? " workspace-nav__link--active" : ""}`}
-                aria-pressed={workspace === "public"}
-                onClick={() => onChangeWorkspace("public")}
-              >
-                Бронирования
-              </button>
-              <button
-                type="button"
-                className={`workspace-nav__link${workspace === "owner" ? " workspace-nav__link--active" : ""}`}
-                aria-pressed={workspace === "owner"}
-                onClick={() => onChangeWorkspace("owner")}
-              >
-                Типы событий
-              </button>
-            </nav>
+            <OwnerWorkspaceNav
+              workspace={workspace}
+              onChangeWorkspace={onChangeWorkspace}
+              className="workspace-nav--embedded"
+            />
           </div>
 
           <div className="owner-hero__meta">

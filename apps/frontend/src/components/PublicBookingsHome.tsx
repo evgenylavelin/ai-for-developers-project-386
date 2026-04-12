@@ -6,15 +6,15 @@ import {
   buildCalendarDaySummaries,
   listBookingsForDate,
 } from "../lib/publicBookings";
-import type { Booking, EventType, ScheduleDay } from "../types";
+import type { Booking, EventType, ScheduleDay, Workspace } from "../types";
 
 type PublicBookingsHomeProps = {
   bookings: Booking[];
   eventTypes: EventType[];
   schedule: ScheduleDay[];
   initialSelectedDate?: string;
-  workspace: "public" | "owner";
-  onChangeWorkspace: (workspace: "public" | "owner") => void;
+  workspace: Workspace;
+  onChangeWorkspace: (workspace: Workspace) => void;
   onCancelBooking: (bookingId: string) => void;
   onStartBooking: (isoDate: string) => void;
 };
@@ -92,11 +92,19 @@ export function PublicBookingsHome({
             </button>
             <button
               type="button"
-              className={`workspace-nav__link${workspace === "owner" ? " workspace-nav__link--active" : ""}`}
-              aria-pressed={workspace === "owner"}
-              onClick={() => onChangeWorkspace("owner")}
+              className={`workspace-nav__link${workspace === "owner-event-types" ? " workspace-nav__link--active" : ""}`}
+              aria-pressed={workspace === "owner-event-types"}
+              onClick={() => onChangeWorkspace("owner-event-types")}
             >
               Типы событий
+            </button>
+            <button
+              type="button"
+              className={`workspace-nav__link${workspace === "owner-settings" ? " workspace-nav__link--active" : ""}`}
+              aria-pressed={workspace === "owner-settings"}
+              onClick={() => onChangeWorkspace("owner-settings")}
+            >
+              Настройки
             </button>
           </nav>
         </div>

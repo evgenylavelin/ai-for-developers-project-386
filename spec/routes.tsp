@@ -4,6 +4,24 @@ using Http;
 
 namespace CallPlanner;
 
+@route("/schedule")
+@tag("Schedule")
+interface ScheduleResource {
+  /**
+   * Owner-facing operation.
+   * Returns the current weekly schedule used to build availability.
+   */
+  @get
+  get(): ScheduleResponse;
+
+  /**
+   * Owner-facing operation.
+   * Replaces the weekly schedule with selected working days and one common time range.
+   */
+  @put
+  update(@body body: UpdateScheduleRequest): UpdateScheduleResponse | BadRequestError;
+}
+
 @route("/event-types")
 @tag("Event Types")
 interface EventTypes {

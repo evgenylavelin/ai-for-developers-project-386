@@ -75,6 +75,14 @@ npm run frontend:build
 npm run frontend:test -- --run
 ```
 
+Backend commands are available once `apps/backend/` exists:
+
+```bash
+npm run backend:dev
+npm run backend:build
+npm run backend:test -- --run
+```
+
 Useful basic commands:
 
 ```bash
@@ -110,6 +118,12 @@ When frontend tests are present:
 * place component and interaction tests in `apps/frontend/src/`
 * keep pure state logic tests near `apps/frontend/src/lib/`
 * document any new frontend tooling in `README.md`
+
+When backend tests are present:
+
+* place API integration tests near `apps/backend/src/`
+* keep pure time and validation helpers under `apps/backend/src/lib/`
+* document any new backend tooling in `README.md`
 
 ---
 

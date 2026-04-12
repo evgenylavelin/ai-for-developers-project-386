@@ -9,6 +9,44 @@ enum BookingStatus {
   cancelled,
 }
 
+enum DayOfWeek {
+  monday,
+  tuesday,
+  wednesday,
+  thursday,
+  friday,
+  saturday,
+  sunday,
+}
+
+model Schedule {
+  workingDays: DayOfWeek[];
+  startTime: string;
+  endTime: string;
+}
+
+model UpdateScheduleRequest {
+  workingDays: DayOfWeek[];
+  startTime: string;
+  endTime: string;
+}
+
+model ScheduleResponse {
+  @statusCode
+  statusCode: 200;
+
+  @body
+  body: Schedule;
+}
+
+model UpdateScheduleResponse {
+  @statusCode
+  statusCode: 200;
+
+  @body
+  body: Schedule;
+}
+
 model EventType {
   id: string;
   title: string;

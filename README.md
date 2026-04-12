@@ -51,6 +51,7 @@ API описывается с помощью **TypeSpec**:
 ### Владелец календаря (Owner)
 
 - создаёт типы событий
+- управляет типами событий; в `Настройки` задаёт рабочие дни недели и общий интервал работы
 - просматривает список всех бронирований
 
 ### Гость (Guest)
@@ -98,8 +99,8 @@ API описывается с помощью **TypeSpec**:
 
 /spec            # TypeSpec API контракт
 /apps
-/frontend      # frontend приложение
-/backend       # backend приложение
+  /frontend      # frontend приложение
+  /backend       # backend приложение
 
 ```
 
@@ -125,6 +126,10 @@ npm run spec:format
 npm run frontend:dev
 ```
 
+В режиме разработки frontend проксирует API-запросы `'/schedule'`, `'/event-types'` и `'/bookings'`
+на backend по адресу `http://localhost:3001`. Если backend запущен на другом адресе, задайте
+`VITE_API_BASE_URL`.
+
 Сборка frontend-приложения:
 
 ```bash
@@ -135,6 +140,24 @@ npm run frontend:build
 
 ```bash
 npm run frontend:test -- --run
+```
+
+Запуск backend-приложения:
+
+```bash
+npm run backend:dev
+```
+
+Сборка backend-приложения:
+
+```bash
+npm run backend:build
+```
+
+Запуск backend-тестов:
+
+```bash
+npm run backend:test -- --run
 ```
 
 ---

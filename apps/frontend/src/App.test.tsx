@@ -1,11 +1,15 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import App from "./App";
 import { GuestBookingPage } from "./components/GuestBookingPage";
 import { bookingSchedule, multiEventTypes, singleEventType } from "./data/mockGuestFlow";
 import { buildAvailableDatesByEventType } from "./lib/publicBookings";
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("App", () => {
   it("renders the unavailable state when there are no event types", () => {
@@ -357,21 +361,68 @@ describe("App", () => {
     );
   });
 
-  it("navigates from public bookings to the owner workspace and back", async () => {
+  it("navigates to owner settings through the embedded owner navigation and back", async () => {
     const user = userEvent.setup();
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        workingDays: ["monday", "wednesday"],
+        startTime: "09:00",
+        endTime: "18:00",
+      }),
+    });
+
+    vi.stubGlobal("fetch", fetchMock);
 
     render(<App scenario="public" />);
 
     expect(screen.getByRole("heading", { name: "Бронирования" })).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Типы событий" }));
+    await user.click(
+      within(screen.getByRole("navigation", { name: "Разделы приложения" })).getByRole("button", {
+        name: "Типы событий",
+      }),
+    );
 
-    expect(screen.getByRole("heading", { name: "Управление типами событий" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Редактирование типа события" })).toBeInTheDocument();
+    const workspaceNav = screen.getByRole("navigation", { name: "Разделы рабочего пространства" });
 
-    await user.click(screen.getByRole("button", { name: "Бронирования" }));
+    await user.click(within(workspaceNav).getByRole("button", { name: "Настройки" }));
 
-    expect(screen.getByRole("heading", { name: "Бронирования" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Рабочее расписание" })).toBeInTheDocument();
+    expect(screen.getByDisplayValue("09:00")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("18:00")).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    const settingsNav = screen.getByRole("navigation", { name: "Разделы рабочего пространства" });
+
+    await user.click(within(settingsNav).getByRole("button", { name: "Бронирования" }));
+
+    expect(await screen.findByRole("heading", { name: "Бронирования" })).toBeInTheDocument();
+  });
+
+  it("opens owner settings directly from the public bookings navigation", async () => {
+    const user = userEvent.setup();
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        workingDays: ["monday", "wednesday"],
+        startTime: "09:00",
+        endTime: "18:00",
+      }),
+    });
+
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<App scenario="public" />);
+
+    await user.click(
+      within(screen.getByRole("navigation", { name: "Разделы приложения" })).getByRole("button", {
+        name: "Настройки",
+      }),
+    );
+
+    expect(await screen.findByRole("heading", { name: "Рабочее расписание" })).toBeInTheDocument();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it('opens create mode from "+ Создать тип события" with empty fields and no destructive actions', async () => {
@@ -379,7 +430,11 @@ describe("App", () => {
 
     render(<App scenario="public" />);
 
-    await user.click(screen.getByRole("button", { name: "Типы событий" }));
+    await user.click(
+      within(screen.getByRole("navigation", { name: "Разделы приложения" })).getByRole("button", {
+        name: "Типы событий",
+      }),
+    );
     await user.click(screen.getByRole("button", { name: "+ Создать тип события" }));
 
     expect(screen.getByRole("heading", { name: "Новый тип события" })).toBeInTheDocument();
@@ -396,7 +451,11 @@ describe("App", () => {
 
     render(<App scenario="public" />);
 
-    await user.click(screen.getByRole("button", { name: "Типы событий" }));
+    await user.click(
+      within(screen.getByRole("navigation", { name: "Разделы приложения" })).getByRole("button", {
+        name: "Типы событий",
+      }),
+    );
     await user.click(screen.getByRole("button", { name: "+ Создать тип события" }));
     await user.type(screen.getByLabelText("Название"), "Новая диагностика");
     await user.type(
@@ -421,7 +480,11 @@ describe("App", () => {
 
     render(<App scenario="public" />);
 
-    await user.click(screen.getByRole("button", { name: "Типы событий" }));
+    await user.click(
+      within(screen.getByRole("navigation", { name: "Разделы приложения" })).getByRole("button", {
+        name: "Типы событий",
+      }),
+    );
     await user.click(screen.getByRole("button", { name: /Короткий созвон/i }));
     await user.click(screen.getByRole("button", { name: "Удалить" }));
 
@@ -444,7 +507,11 @@ describe("App", () => {
 
     render(<App scenario="public" />);
 
-    await user.click(screen.getByRole("button", { name: "Типы событий" }));
+    await user.click(
+      within(screen.getByRole("navigation", { name: "Разделы приложения" })).getByRole("button", {
+        name: "Типы событий",
+      }),
+    );
 
     const selectedEventType = within(
       screen.getByRole("list", { name: "Список типов событий" }),
