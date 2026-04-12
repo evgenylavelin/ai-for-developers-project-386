@@ -4,6 +4,7 @@ type OwnerWorkspaceNavProps = {
   workspace: Workspace;
   onChangeWorkspace: (workspace: Workspace) => void;
   className?: string;
+  ariaLabel?: string;
 };
 
 const workspaceItems: Array<{ value: Workspace; label: string }> = [
@@ -16,11 +17,12 @@ export function OwnerWorkspaceNav({
   workspace,
   onChangeWorkspace,
   className,
+  ariaLabel = "Разделы приложения",
 }: OwnerWorkspaceNavProps) {
   return (
     <nav
       className={["workspace-nav", className].filter(Boolean).join(" ")}
-      aria-label="Разделы рабочего пространства"
+      aria-label={ariaLabel}
     >
       {workspaceItems.map((item) => (
         <button

@@ -55,6 +55,13 @@ select {
   gap: 0;
 }
 
+.workspace-page {
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  display: grid;
+  gap: 20px;
+}
+
 .workspace-nav {
   display: flex;
   flex-wrap: wrap;
@@ -130,13 +137,7 @@ select {
   backdrop-filter: blur(16px);
 }
 
-.bookings-home {
-  width: min(100%, 1180px);
-  display: grid;
-  gap: 20px;
-}
-
-.bookings-home__hero,
+.workspace-hero,
 .bookings-card {
   border: 1px solid rgba(24, 33, 23, 0.08);
   border-radius: 28px;
@@ -145,11 +146,23 @@ select {
   backdrop-filter: blur(16px);
 }
 
-.bookings-home__hero {
+.workspace-hero {
+  display: grid;
+  gap: 24px;
+  min-height: 232px;
   padding: 32px;
+}
+
+.workspace-hero--public {
   background:
     radial-gradient(circle at top right, rgba(139, 168, 121, 0.18), transparent 40%),
     rgba(255, 255, 255, 0.78);
+}
+
+.workspace-hero--owner {
+  background:
+    radial-gradient(circle at top right, rgba(209, 153, 91, 0.18), transparent 42%),
+    linear-gradient(135deg, rgba(247, 244, 238, 0.94), rgba(255, 255, 255, 0.76));
 }
 
 .hero-header {
@@ -159,8 +172,14 @@ select {
   gap: 24px;
 }
 
-.bookings-home__copy {
+.workspace-hero__copy {
   max-width: 60ch;
+}
+
+.workspace-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .bookings-home__warning {
@@ -688,7 +707,6 @@ h1 {
   gap: 20px;
 }
 
-.owner-hero,
 .owner-card {
   border: 1px solid rgba(24, 33, 23, 0.08);
   border-radius: 30px;
@@ -1094,7 +1112,7 @@ h1 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .bookings-home__hero,
+  .workspace-hero,
   .bookings-card {
     padding: 20px;
     border-radius: 22px;
@@ -1127,7 +1145,7 @@ h1 {
     width: 100%;
   }
 
-  .owner-hero,
+  .workspace-hero,
   .owner-card {
     padding: 20px;
     border-radius: 24px;
@@ -1160,7 +1178,7 @@ h1 {
     grid-template-columns: 1fr;
   }
 
-  .owner-hero {
+  .workspace-hero {
     grid-template-columns: 1fr;
     display: grid;
   }

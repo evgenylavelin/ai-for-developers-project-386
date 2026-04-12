@@ -7,7 +7,7 @@ import {
   validateOwnerEventTypeForm,
 } from "../lib/ownerEventTypes";
 import type { OwnerEventType, OwnerEventTypeForm, OwnerEventTypeInput, Workspace } from "../types";
-import { OwnerWorkspaceNav } from "./OwnerWorkspaceNav";
+import { WorkspaceHero } from "./WorkspaceHero";
 
 type OwnerEventTypesPageProps = {
   eventTypes: OwnerEventType[];
@@ -278,35 +278,28 @@ export function OwnerEventTypesPage({
 
   return (
     <>
-      <section className="owner-workspace">
-        <header className="owner-hero">
-          <div className="hero-header">
-            <div>
-              <p className="eyebrow">Owner Workspace</p>
-              <h1>Управление типами событий</h1>
-              <p className="panel-copy owner-hero__copy">
-                Настраивайте карточки встреч через backend-источник данных. Изменения сразу
-                синхронизируются с owner workspace и публичным списком доступных типов.
-              </p>
-            </div>
-            <OwnerWorkspaceNav
-              workspace={workspace}
-              onChangeWorkspace={onChangeWorkspace}
-              className="workspace-nav--embedded"
-            />
-          </div>
-
-          <div className="owner-hero__meta">
-            <span className="owner-kpi">
-              <strong>{eventTypes.length}</strong>
-              <span>всего типов</span>
-            </span>
-            <span className="owner-kpi">
-              <strong>{eventTypes.filter((eventType) => eventType.isArchived).length}</strong>
-              <span>в архиве</span>
-            </span>
-          </div>
-        </header>
+      <section className="workspace-page owner-workspace">
+        <WorkspaceHero
+          eyebrow="Owner Workspace"
+          title="Управление типами событий"
+          description="Настраивайте карточки встреч через backend-источник данных. Изменения сразу синхронизируются с owner workspace и публичным списком доступных типов."
+          workspace={workspace}
+          onChangeWorkspace={onChangeWorkspace}
+          className="workspace-hero--owner"
+          navAriaLabel="Разделы рабочего пространства"
+          meta={
+            <>
+              <span className="owner-kpi">
+                <strong>{eventTypes.length}</strong>
+                <span>всего типов</span>
+              </span>
+              <span className="owner-kpi">
+                <strong>{eventTypes.filter((eventType) => eventType.isArchived).length}</strong>
+                <span>в архиве</span>
+              </span>
+            </>
+          }
+        />
 
         <div className="owner-layout">
           <section className="owner-card owner-list-panel" aria-labelledby="owner-event-types-title">

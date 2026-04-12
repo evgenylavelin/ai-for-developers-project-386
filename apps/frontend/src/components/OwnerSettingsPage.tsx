@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 
-import { OwnerWorkspaceNav } from "./OwnerWorkspaceNav";
+import { WorkspaceHero } from "./WorkspaceHero";
 import {
   createEmptyOwnerSchedule,
   toggleWorkingDay,
@@ -126,36 +126,28 @@ export function OwnerSettingsPage({
   };
 
   return (
-    <section className="owner-workspace">
-      <header className="owner-hero">
-        <div className="hero-header">
-          <div>
-            <p className="eyebrow">Owner Workspace</p>
-            <h1>Рабочее расписание</h1>
-            <p className="panel-copy owner-hero__copy">
-              Настройте рабочие дни и единое время приема, чтобы публичные слоты строились по
-              одному графику.
-            </p>
-          </div>
-
-          <OwnerWorkspaceNav
-            workspace={workspace}
-            onChangeWorkspace={onChangeWorkspace}
-            className="workspace-nav--embedded"
-          />
-        </div>
-
-        <div className="owner-hero__meta">
-          <span className="owner-kpi">
-            <strong>{schedule.workingDays.length}</strong>
-            <span>рабочих дней</span>
-          </span>
-          <span className="owner-kpi">
-            <strong>{schedule.startTime && schedule.endTime ? `${schedule.startTime}–${schedule.endTime}` : "—"}</strong>
-            <span>единый интервал</span>
-          </span>
-        </div>
-      </header>
+    <section className="workspace-page owner-workspace">
+      <WorkspaceHero
+        eyebrow="Owner Workspace"
+        title="Рабочее расписание"
+        description="Настройте рабочие дни и единое время приема, чтобы публичные слоты строились по одному графику."
+        workspace={workspace}
+        onChangeWorkspace={onChangeWorkspace}
+        className="workspace-hero--owner"
+        navAriaLabel="Разделы рабочего пространства"
+        meta={
+          <>
+            <span className="owner-kpi">
+              <strong>{schedule.workingDays.length}</strong>
+              <span>рабочих дней</span>
+            </span>
+            <span className="owner-kpi">
+              <strong>{schedule.startTime && schedule.endTime ? `${schedule.startTime}–${schedule.endTime}` : "—"}</strong>
+              <span>единый интервал</span>
+            </span>
+          </>
+        }
+      />
 
       <div className="owner-settings-layout">
         <section className="owner-card owner-settings-panel" aria-labelledby="owner-schedule-title">

@@ -7,6 +7,7 @@ import {
 } from "../lib/publicBookings";
 import type { CalendarDay } from "../lib/publicCalendar";
 import type { AvailableDatesByEventType, Booking, EventType, Workspace } from "../types";
+import { WorkspaceHero } from "./WorkspaceHero";
 
 type PublicBookingsHomeProps = {
   bookings: Booking[];
@@ -99,46 +100,16 @@ export function PublicBookingsHome({
   const isAvailabilityKnown = availabilityState === "ready";
 
   return (
-    <section className="bookings-home">
-      <div className="bookings-home__hero">
-        <div className="hero-header">
-          <div>
-            <p className="eyebrow">Call Planner</p>
-            <h1>Бронирования</h1>
-            <p className="panel-copy bookings-home__copy">
-              Публичный календарь всех встреч на ближайшие 14 дней. В этой учебной версии
-              детали встреч и отмена доступны без авторизации.
-            </p>
-          </div>
-
-          <nav className="workspace-nav workspace-nav--embedded" aria-label="Разделы приложения">
-            <button
-              type="button"
-              className={`workspace-nav__link${workspace === "public" ? " workspace-nav__link--active" : ""}`}
-              aria-pressed={workspace === "public"}
-              onClick={() => onChangeWorkspace("public")}
-            >
-              Бронирования
-            </button>
-            <button
-              type="button"
-              className={`workspace-nav__link${workspace === "owner-event-types" ? " workspace-nav__link--active" : ""}`}
-              aria-pressed={workspace === "owner-event-types"}
-              onClick={() => onChangeWorkspace("owner-event-types")}
-            >
-              Типы событий
-            </button>
-            <button
-              type="button"
-              className={`workspace-nav__link${workspace === "owner-settings" ? " workspace-nav__link--active" : ""}`}
-              aria-pressed={workspace === "owner-settings"}
-              onClick={() => onChangeWorkspace("owner-settings")}
-            >
-              Настройки
-            </button>
-          </nav>
-        </div>
-      </div>
+    <section className="workspace-page bookings-home">
+      <WorkspaceHero
+        eyebrow="Call Planner"
+        title="Бронирования"
+        description="Публичный календарь всех встреч на ближайшие 14 дней. В этой учебной версии детали встреч и отмена доступны без авторизации."
+        workspace={workspace}
+        onChangeWorkspace={onChangeWorkspace}
+        className="workspace-hero--public"
+        navAriaLabel="Разделы приложения"
+      />
 
       {startupWarning ? (
         <section className="availability-note bookings-home__warning" role="alert">
