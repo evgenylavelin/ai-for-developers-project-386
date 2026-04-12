@@ -16,22 +16,34 @@ export function ContactsStep({
   return (
     <div className="stack">
       <label className="field">
-        <span>Имя</span>
+        <span className="field-label">
+          <span>Имя</span>
+          <span className="required-mark" aria-hidden="true">
+            *
+          </span>
+        </span>
         <input
           type="text"
           name="name"
           autoComplete="name"
+          required
           value={name}
           onChange={(event) => onNameChange(event.target.value)}
         />
       </label>
 
       <label className="field">
-        <span>Email</span>
+        <span className="field-label">
+          <span>Email</span>
+          <span className="required-mark" aria-hidden="true">
+            *
+          </span>
+        </span>
         <input
           type="email"
           name="email"
           autoComplete="email"
+          required
           value={email}
           onChange={(event) => onEmailChange(event.target.value)}
         />

@@ -170,8 +170,15 @@ export function OwnerSettingsPage({
           {!loading && !loadError ? (
             <form className="owner-schedule-form" onSubmit={handleSubmit}>
               <div className="stack owner-form-fields">
-                <fieldset className="owner-weekday-fieldset">
-                  <legend>Рабочие дни</legend>
+                <fieldset className="owner-weekday-fieldset" aria-required="true">
+                  <legend>
+                    <span className="field-label">
+                      <span>Рабочие дни</span>
+                      <span className="required-mark" aria-hidden="true">
+                        *
+                      </span>
+                    </span>
+                  </legend>
                   <div className="owner-weekday-grid">
                     {weekdayOptions.map((weekday) => {
                       const selected = schedule.workingDays.includes(weekday.value);
@@ -195,20 +202,32 @@ export function OwnerSettingsPage({
 
                 <div className="owner-time-grid">
                   <label className="field">
-                    <span>Начало</span>
+                    <span className="field-label">
+                      <span>Начало</span>
+                      <span className="required-mark" aria-hidden="true">
+                        *
+                      </span>
+                    </span>
                     <input
                       type="time"
                       value={schedule.startTime}
+                      required
                       disabled={saving}
                       onChange={(event) => handleTimeChange("startTime", event.target.value)}
                     />
                   </label>
 
                   <label className="field">
-                    <span>Окончание</span>
+                    <span className="field-label">
+                      <span>Окончание</span>
+                      <span className="required-mark" aria-hidden="true">
+                        *
+                      </span>
+                    </span>
                     <input
                       type="time"
                       value={schedule.endTime}
+                      required
                       disabled={saving}
                       onChange={(event) => handleTimeChange("endTime", event.target.value)}
                     />

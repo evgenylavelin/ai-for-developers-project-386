@@ -57,14 +57,6 @@ describe("ownerEventTypes helpers", () => {
       validateOwnerEventTypeForm({
         title: "Созвон",
         description: "   ",
-        durationMinutes: "30",
-      }),
-    ).toBe("Добавьте короткое описание типа события.");
-
-    expect(
-      validateOwnerEventTypeForm({
-        title: "Созвон",
-        description: "Описание",
         durationMinutes: "0",
       }),
     ).toBe("Длительность должна быть указана в минутах и быть больше нуля.");
@@ -72,7 +64,7 @@ describe("ownerEventTypes helpers", () => {
     expect(
       validateOwnerEventTypeForm({
         title: "Созвон",
-        description: "Описание",
+        description: "   ",
         durationMinutes: "45",
       }),
     ).toBe("");

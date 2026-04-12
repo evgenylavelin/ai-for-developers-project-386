@@ -37,6 +37,18 @@ select {
   font: inherit;
 }
 
+.field-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.required-mark {
+  color: #b5443c;
+  font-weight: 700;
+  line-height: 1;
+}
+
 .app-shell {
   min-height: 100vh;
   display: grid;

@@ -45,10 +45,6 @@ function getValidationErrorField(error: string): keyof OwnerEventTypeForm | null
     return "title";
   }
 
-  if (error === "Добавьте короткое описание типа события.") {
-    return "description";
-  }
-
   if (error === "Длительность должна быть указана в минутах и быть больше нуля.") {
     return "durationMinutes";
   }
@@ -409,10 +405,16 @@ export function OwnerEventTypesPage({
 
             <div className="stack owner-form-fields">
               <label className="field">
-                <span>Название</span>
+                <span className="field-label">
+                  <span>Название</span>
+                  <span className="required-mark" aria-hidden="true">
+                    *
+                  </span>
+                </span>
                 <input
                   type="text"
                   name="title"
+                  required
                   value={form.title}
                   disabled={submitting}
                   aria-invalid={errorField === "title"}
@@ -422,27 +424,31 @@ export function OwnerEventTypesPage({
               </label>
 
               <label className="field">
-                <span>Описание</span>
+                <span className="field-label">
+                  <span>Описание</span>
+                </span>
                 <textarea
                   name="description"
                   rows={4}
                   value={form.description}
                   disabled={submitting}
-                  aria-invalid={errorField === "description"}
-                  aria-describedby={
-                    errorField === "description" ? "owner-event-type-form-error" : undefined
-                  }
                   onChange={(event) => handleFieldChange("description", event.target.value)}
                 />
               </label>
 
               <label className="field">
-                <span>Длительность</span>
+                <span className="field-label">
+                  <span>Длительность</span>
+                  <span className="required-mark" aria-hidden="true">
+                    *
+                  </span>
+                </span>
                 <input
                   type="number"
                   min="1"
                   step="5"
                   name="durationMinutes"
+                  required
                   value={form.durationMinutes}
                   disabled={submitting}
                   aria-invalid={errorField === "durationMinutes"}

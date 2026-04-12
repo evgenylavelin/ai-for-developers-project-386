@@ -21,10 +21,6 @@ export function validateOwnerEventTypeForm(form: OwnerEventTypeForm): string {
     return "Укажите название типа события.";
   }
 
-  if (!form.description.trim()) {
-    return "Добавьте короткое описание типа события.";
-  }
-
   const durationMinutes = Number(form.durationMinutes);
 
   if (!Number.isInteger(durationMinutes) || durationMinutes <= 0) {
