@@ -425,11 +425,11 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: /Короткий созвон/i }));
     await user.click(screen.getByRole("button", { name: "Удалить" }));
 
-    expect(
-      screen.getByText("Удалить тип события? Он исчезнет из owner workspace и будущих вариантов записи."),
-    ).toBeInTheDocument();
+    const dialog = screen.getByRole("dialog", { name: "Удалить тип события?" });
 
-    await user.click(screen.getByRole("button", { name: "Подтвердить удаление" }));
+    expect(within(dialog).getByText("Он исчезнет из owner workspace и будущих вариантов записи.")).toBeInTheDocument();
+
+    await user.click(within(dialog).getByRole("button", { name: "Подтвердить удаление" }));
 
     expect(screen.getByText("Тип события удален из локального списка.")).toBeInTheDocument();
     expect(
@@ -459,11 +459,15 @@ describe("App", () => {
 
     await user.click(screen.getByRole("button", { name: "Архивировать" }));
 
+    const dialog = screen.getByRole("dialog", { name: "Перевести тип в архив?" });
+
     expect(
-      screen.getByText("Перевести тип в архив? Он останется видимым в owner списке для истории бронирований."),
+      within(dialog).getByText(
+        "Он останется видимым в owner списке для истории бронирований.",
+      ),
     ).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Подтвердить архивирование" }));
+    await user.click(within(dialog).getByRole("button", { name: "Подтвердить архивирование" }));
 
     expect(
       screen.getByText("Тип события переведен в архив в локальном mock-состоянии."),
