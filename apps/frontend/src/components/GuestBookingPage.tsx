@@ -331,93 +331,104 @@ export function GuestBookingPage({
   };
 
   return (
-    <section className="panel">
-      <p className="eyebrow">Call Planner</p>
-      <ProgressSteps steps={steps} activeIndex={activeIndex} />
-      <SelectionSummary values={summaryParts} />
-      <h1>{heading}</h1>
-      <p className="panel-copy">{copy}</p>
-      {currentScreen === "event-type" ? (
-        <EventTypeStep
-          eventTypes={eventTypes}
-          selectedEventTypeId={selectedEventTypeId}
-          onSelect={(eventTypeId) => {
-            const didEventTypeChange = eventTypeId !== selectedEventTypeId;
+    <section className="booking-flow">
+      <header className="workspace-hero workspace-hero--public booking-flow__hero">
+        <p className="eyebrow">Call Planner</p>
+        <ProgressSteps steps={steps} activeIndex={activeIndex} />
+        <div className="booking-flow__summary-slot">
+          {summaryParts.length > 0 ? (
+            <SelectionSummary values={summaryParts} />
+          ) : (
+            <div className="selection-summary selection-summary--placeholder" aria-hidden="true" />
+          )}
+        </div>
+        <h1>{heading}</h1>
+        <p className="panel-copy booking-flow__copy">{copy}</p>
+      </header>
 
-            setSelectedEventTypeId(eventTypeId);
-            setSubmissionError("");
+      <section className="panel booking-flow__panel">
+        {currentScreen === "event-type" ? (
+          <EventTypeStep
+            eventTypes={eventTypes}
+            selectedEventTypeId={selectedEventTypeId}
+            onSelect={(eventTypeId) => {
+              const didEventTypeChange = eventTypeId !== selectedEventTypeId;
 
-            if (!didEventTypeChange) {
-              return;
-            }
-
-            const nextDates = datesByEventType[eventTypeId] ?? [];
-            const nextSelectedDate =
-              initialSelectedDate && nextDates.some((date) => date.isoDate === initialSelectedDate)
-                ? initialSelectedDate
-                : nextDates[0]?.isoDate ?? "";
-
-            setSelectedDate(nextSelectedDate);
-            setSelectedTime("");
-          }}
-        />
-      ) : currentScreen === "date-time" ? (
-        <DateTimeStep
-          dates={currentDates}
-          selectedDate={selectedDate}
-          selectedTime={selectedTime}
-          onSelectDate={(isoDate) => {
-            setSelectedDate(isoDate);
-            setSelectedTime("");
-            setSubmissionError("");
-          }}
-          onSelectTime={(time) => {
-            setSelectedTime(time);
-            setSubmissionError("");
-          }}
-        />
-      ) : (
-        <ContactsStep
-          name={name}
-          email={email}
-          error={submissionError}
-          emailInvalid={Boolean(email.trim()) && !isValidEmail(email.trim())}
-          onNameChange={(value) => {
-            setName(value);
-            if (submissionError) {
+              setSelectedEventTypeId(eventTypeId);
               setSubmissionError("");
-            }
-          }}
-          onEmailChange={(value) => {
-            setEmail(value);
-            if (submissionError) {
-              setSubmissionError("");
-            }
-          }}
-        />
-      )}
-      <div className="actions">
-        <button type="button" className="secondary-button" onClick={handleBack}>
-          {currentScreen === "event-type" ? "Выйти из записи" : "Назад"}
-        </button>
-        {currentScreen === "contacts" ? (
-          <button type="button" className="primary-button" disabled={isSubmitting} onClick={() => void submit()}>
-            {isSubmitting ? "Сохраняем..." : "Подтвердить"}
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="primary-button"
-            disabled={!canContinue}
-            onClick={() => {
-              setSubmissionError("");
-              setCurrentScreen(currentScreen === "event-type" ? "date-time" : "contacts");
+
+              if (!didEventTypeChange) {
+                return;
+              }
+
+              const nextDates = datesByEventType[eventTypeId] ?? [];
+              const nextSelectedDate =
+                initialSelectedDate && nextDates.some((date) => date.isoDate === initialSelectedDate)
+                  ? initialSelectedDate
+                  : nextDates[0]?.isoDate ?? "";
+
+              setSelectedDate(nextSelectedDate);
+              setSelectedTime("");
             }}
-          >
-            Далее
-          </button>
+          />
+        ) : currentScreen === "date-time" ? (
+          <DateTimeStep
+            dates={currentDates}
+            selectedDate={selectedDate}
+            selectedTime={selectedTime}
+            onSelectDate={(isoDate) => {
+              setSelectedDate(isoDate);
+              setSelectedTime("");
+              setSubmissionError("");
+            }}
+            onSelectTime={(time) => {
+              setSelectedTime(time);
+              setSubmissionError("");
+            }}
+          />
+        ) : (
+          <ContactsStep
+            name={name}
+            email={email}
+            error={submissionError}
+            emailInvalid={Boolean(email.trim()) && !isValidEmail(email.trim())}
+            onNameChange={(value) => {
+              setName(value);
+              if (submissionError) {
+                setSubmissionError("");
+              }
+            }}
+            onEmailChange={(value) => {
+              setEmail(value);
+              if (submissionError) {
+                setSubmissionError("");
+              }
+            }}
+          />
         )}
-      </div>
+        <div className="actions">
+          <button type="button" className="secondary-button" onClick={handleBack}>
+            {currentScreen === "event-type" ? "Выйти из записи" : "Назад"}
+          </button>
+          {currentScreen === "contacts" ? (
+            <button type="button" className="primary-button" disabled={isSubmitting} onClick={() => void submit()}>
+              {isSubmitting ? "Сохраняем..." : "Подтвердить"}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="primary-button"
+              disabled={!canContinue}
+              onClick={() => {
+                setSubmissionError("");
+                setCurrentScreen(currentScreen === "event-type" ? "date-time" : "contacts");
+              }}
+            >
+              Далее
+            </button>
+          )}
+        </div>
+      </section>
     </section>
   );
 }

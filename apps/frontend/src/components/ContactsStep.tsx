@@ -16,8 +16,8 @@ export function ContactsStep({
   onEmailChange,
 }: ContactsStepProps) {
   return (
-    <div className="stack">
-      <label className="field">
+    <div className="stack booking-step">
+      <label className="field booking-form-card">
         <span className="field-label">
           <span>Имя</span>
           <span className="required-mark" aria-hidden="true">
@@ -34,7 +34,7 @@ export function ContactsStep({
         />
       </label>
 
-      <label className="field">
+      <label className="field booking-form-card">
         <span className="field-label">
           <span>Email</span>
           <span className="required-mark" aria-hidden="true">
@@ -52,7 +52,7 @@ export function ContactsStep({
         />
       </label>
 
-      {error ? <p className="error-copy">{error}</p> : null}
+      {error ? <p className="error-copy booking-step-card booking-step-card--error">{error}</p> : null}
     </div>
   );
 }

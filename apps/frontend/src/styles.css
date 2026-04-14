@@ -183,7 +183,7 @@ select {
 .workspace-hero--owner {
   background:
     radial-gradient(circle at top right, var(--color-glow), transparent 42%),
-    linear-gradient(135deg, rgba(242, 255, 217, 0.94), rgba(249, 255, 244, 0.76));
+    rgba(249, 255, 244, 0.78);
 }
 
 .hero-header {
@@ -552,6 +552,40 @@ h1 {
   color: var(--color-text-secondary);
 }
 
+.booking-flow {
+  display: grid;
+  gap: 20px;
+}
+
+.booking-flow__hero {
+  min-height: 260px;
+}
+
+.booking-flow__hero .progress-steps {
+  margin-bottom: 0;
+}
+
+.booking-flow__summary-slot {
+  min-height: 58px;
+  margin-top: 16px;
+}
+
+.booking-flow__hero .selection-summary {
+  margin: 0;
+}
+
+.selection-summary--placeholder {
+  visibility: hidden;
+}
+
+.booking-flow__copy {
+  min-height: calc(1.6em * 2);
+}
+
+.booking-flow__panel {
+  width: 100%;
+}
+
 .progress-steps {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
@@ -634,6 +668,34 @@ h1 {
   margin-top: 24px;
 }
 
+.booking-step {
+  gap: 16px;
+  margin-top: 0;
+}
+
+.booking-step-card,
+.booking-form-card {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(249, 255, 244, 0.96), rgba(218, 241, 210, 0.9));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
+}
+
+.booking-step-card--compact {
+  padding: 14px;
+}
+
+.booking-step-card--error {
+  color: var(--color-text-primary);
+}
+
+.booking-step__empty-copy {
+  margin-top: 8px;
+}
+
 .choice-card,
 .calendar-day,
 .slot-button {
@@ -642,8 +704,9 @@ h1 {
   width: 100%;
   padding: 12px;
   border: 1px solid var(--color-border);
-  border-radius: 10px;
-  background: rgba(249, 255, 244, 0.88);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(249, 255, 244, 0.98), rgba(218, 241, 210, 0.88));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
   color: var(--color-text-primary);
   text-align: left;
   cursor: pointer;
@@ -661,6 +724,11 @@ h1 {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
+}
+
+.booking-step-card .calendar-grid,
+.booking-step-card .slot-grid {
+  gap: 10px;
 }
 
 .calendar-day {
@@ -699,6 +767,7 @@ h1 {
 
 .slot-date-label {
   margin: 0;
+  font-weight: 600;
   color: var(--color-text-secondary);
   font-size: 0.95rem;
 }
@@ -774,8 +843,8 @@ h1 {
   min-height: 46px;
   padding: 0 14px;
   border: 1px solid var(--color-border);
-  border-radius: 10px;
-  background: rgba(249, 255, 244, 0.92);
+  border-radius: 16px;
+  background: rgba(249, 255, 244, 0.94);
   color: var(--color-text-primary);
 }
 

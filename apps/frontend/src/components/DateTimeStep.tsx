@@ -17,8 +17,10 @@ export function DateTimeStep({
 }: DateTimeStepProps) {
   if (dates.length === 0) {
     return (
-      <div className="stack">
-        <p className="empty-copy">Свободные даты пока недоступны. Попробуйте позже.</p>
+      <div className="stack booking-step">
+        <section className="booking-step-card">
+          <p className="empty-copy">Свободные даты пока недоступны. Попробуйте позже.</p>
+        </section>
       </div>
     );
   }
@@ -26,49 +28,53 @@ export function DateTimeStep({
   const activeDate = dates.find((date) => date.isoDate === selectedDate) ?? dates[0];
 
   return (
-    <div className="stack">
-      <div className="calendar-grid">
-        {dates.map((date) => {
-          const active = date.isoDate === activeDate.isoDate;
+    <div className="stack booking-step">
+      <section className="booking-step-card booking-step-card--compact">
+        <div className="calendar-grid">
+          {dates.map((date) => {
+            const active = date.isoDate === activeDate.isoDate;
 
-          return (
-            <button
-              key={date.isoDate}
-              type="button"
-              className={`calendar-day${active ? " calendar-day--selected" : ""}`}
-              aria-label={`${date.weekdayShort} ${date.dayNumber}`}
-              onClick={() => onSelectDate(date.isoDate)}
-            >
-              <span className="calendar-day__weekday">{date.weekdayShort}</span>
-              <span className="calendar-day__slots" aria-hidden="true">
-                {date.slots.length} сл.
-              </span>
-              <span className="calendar-day__number">{date.dayNumber}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      <p className="slot-date-label">{activeDate.fullLabel}</p>
-
-      {activeDate.slots.length === 0 ? (
-        <p className="empty-copy">
-          На выбранный день свободных слотов нет. Выберите другую дату.
-        </p>
-      ) : (
-        <div className="slot-grid">
-          {activeDate.slots.map((slot) => (
-            <button
-              key={slot}
-              type="button"
-              className={`slot-button${slot === selectedTime ? " slot-button--selected" : ""}`}
-              onClick={() => onSelectTime(slot)}
-            >
-              {slot}
-            </button>
-          ))}
+            return (
+              <button
+                key={date.isoDate}
+                type="button"
+                className={`calendar-day${active ? " calendar-day--selected" : ""}`}
+                aria-label={`${date.weekdayShort} ${date.dayNumber}`}
+                onClick={() => onSelectDate(date.isoDate)}
+              >
+                <span className="calendar-day__weekday">{date.weekdayShort}</span>
+                <span className="calendar-day__slots" aria-hidden="true">
+                  {date.slots.length} сл.
+                </span>
+                <span className="calendar-day__number">{date.dayNumber}</span>
+              </button>
+            );
+          })}
         </div>
-      )}
+      </section>
+
+      <section className="booking-step-card">
+        <p className="slot-date-label">{activeDate.fullLabel}</p>
+
+        {activeDate.slots.length === 0 ? (
+          <p className="empty-copy booking-step__empty-copy">
+            На выбранный день свободных слотов нет. Выберите другую дату.
+          </p>
+        ) : (
+          <div className="slot-grid">
+            {activeDate.slots.map((slot) => (
+              <button
+                key={slot}
+                type="button"
+                className={`slot-button${slot === selectedTime ? " slot-button--selected" : ""}`}
+                onClick={() => onSelectTime(slot)}
+              >
+                {slot}
+              </button>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }
