@@ -434,7 +434,7 @@ export function OwnerEventTypesPage({
 
               <label className="field">
                 <span className="field-label">
-                  <span>Длительность</span>
+                  <span>Длительность (мин)</span>
                   <span className="required-mark" aria-hidden="true">
                     *
                   </span>
