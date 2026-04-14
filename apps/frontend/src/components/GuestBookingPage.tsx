@@ -327,7 +327,7 @@ export function GuestBookingPage({
       )}
       <div className="actions">
         <button type="button" className="secondary-button" onClick={handleBack}>
-          Назад
+          {currentScreen === "event-type" ? "Выйти из записи" : "Назад"}
         </button>
         {currentScreen === "contacts" ? (
           <button type="button" className="primary-button" disabled={isSubmitting} onClick={() => void submit()}>

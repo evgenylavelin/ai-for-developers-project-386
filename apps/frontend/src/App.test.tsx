@@ -188,8 +188,12 @@ async function openOwnerEventTypesWorkspace(user: ReturnType<typeof userEvent.se
     return;
   }
 
+  const navigation =
+    screen.queryByRole("navigation", { name: "Разделы приложения" }) ??
+    screen.getByRole("navigation", { name: "Разделы рабочего пространства" });
+
   await user.click(
-    within(screen.getByRole("navigation", { name: "Разделы приложения" })).getByRole("button", {
+    within(navigation).getByRole("button", {
       name: "Типы событий",
     }),
   );
@@ -1246,6 +1250,47 @@ describe("App", () => {
       "filter-chip--active",
     );
     expect(screen.getByText("Пятница, 17 апреля")).toBeInTheDocument();
+  });
+
+  it("preserves the selected slot when returning to event types and keeping the same type", async () => {
+    const user = userEvent.setup();
+
+    render(<App scenario="public" />);
+
+    await user.click(screen.getByRole("button", { name: "Пятница, 17 апреля" }));
+    await user.click(screen.getByRole("button", { name: "Стратегическая сессия, 30 мин" }));
+    await user.click(screen.getByRole("button", { name: "Записаться" }));
+    await user.click(screen.getByRole("button", { name: "09:00" }));
+    await user.click(screen.getByRole("button", { name: "Назад" }));
+    await user.click(screen.getByRole("button", { name: "Далее" }));
+
+    expect(screen.getByRole("button", { name: "09:00" })).toHaveClass("slot-button--selected");
+    expect(screen.getByRole("button", { name: "Далее" })).toBeEnabled();
+    expect(screen.getByText("Стратегическая сессия")).toBeInTheDocument();
+    expect(screen.getByText("Пятница, 17 апреля")).toBeInTheDocument();
+  });
+
+  it("clears the selected slot after changing the prefilled event type", async () => {
+    const user = userEvent.setup();
+
+    render(<App scenario="public" />);
+
+    await user.click(screen.getByRole("button", { name: "Пятница, 17 апреля" }));
+    await user.click(screen.getByRole("button", { name: "Стратегическая сессия, 30 мин" }));
+    await user.click(screen.getByRole("button", { name: "Записаться" }));
+    await user.click(screen.getByRole("button", { name: "09:00" }));
+    await user.click(screen.getByRole("button", { name: "Назад" }));
+    await user.click(screen.getByRole("button", { name: "Короткий созвон" }));
+    await user.click(screen.getByRole("button", { name: "Далее" }));
+
+    expect(screen.getByText("Короткий созвон")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Далее" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "09:00" })).not.toHaveClass("slot-button--selected");
+    expect(
+      within(screen.getByLabelText("Результат предыдущих шагов")).queryByText(
+        "Пятница, 17 апреля • 09:00",
+      ),
+    ).not.toBeInTheDocument();
   });
 
   it("shows an inline error when contact data is incomplete", async () => {
