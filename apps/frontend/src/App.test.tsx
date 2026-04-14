@@ -1238,12 +1238,12 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: "Назад" }));
 
     expect(screen.getByRole("heading", { name: "Выберите тип встречи" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Назад" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Выйти из записи" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Короткий созвон" })).toHaveClass(
       "choice-card--selected",
     );
 
-    await user.click(screen.getByRole("button", { name: "Назад" }));
+    await user.click(screen.getByRole("button", { name: "Выйти из записи" }));
 
     expect(screen.getByRole("heading", { name: "Бронирования" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Короткий созвон, 15 мин" })).toHaveClass(
