@@ -78,6 +78,7 @@ type GuestBookingPageProps = {
   datesByEventType: AvailableDatesByEventType;
   initialSelectedDate?: string;
   initialSelectedEventTypeId?: string;
+  requireExplicitEventTypeSelection?: boolean;
   successActionLabel?: string;
   onBookingSubmit?: (draft: BookingDraft) => Promise<void>;
   onSuccessAction?: () => void;
@@ -101,13 +102,18 @@ export function GuestBookingPage({
   datesByEventType,
   initialSelectedDate,
   initialSelectedEventTypeId,
+  requireExplicitEventTypeSelection = false,
   successActionLabel,
   onBookingSubmit,
   onSuccessAction,
   onExit,
 }: GuestBookingPageProps) {
   const [storedContacts] = useState(() => readStoredGuestContacts());
-  const entryState = deriveEntryState(eventTypes, initialSelectedEventTypeId);
+  const entryState = deriveEntryState(
+    eventTypes,
+    initialSelectedEventTypeId,
+    requireExplicitEventTypeSelection,
+  );
   const isThreeStepFlow =
     entryState.kind === "choose-event-type" || entryState.kind === "prefilled-public-booking";
   const startsOnDateTime =

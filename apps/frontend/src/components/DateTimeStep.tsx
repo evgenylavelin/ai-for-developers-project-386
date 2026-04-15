@@ -33,19 +33,28 @@ export function DateTimeStep({
         <div className="calendar-grid">
           {dates.map((date) => {
             const active = date.isoDate === activeDate.isoDate;
+            const unavailable = date.slots.length === 0;
 
             return (
               <button
                 key={date.isoDate}
                 type="button"
-                className={`calendar-day${active ? " calendar-day--selected" : ""}`}
+                className={[
+                  "calendar-day",
+                  active ? "calendar-day--selected" : "",
+                  unavailable ? "calendar-day--unavailable" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
                 aria-label={`${date.weekdayShort} ${date.dayNumber}`}
                 onClick={() => onSelectDate(date.isoDate)}
               >
                 <span className="calendar-day__weekday">{date.weekdayShort}</span>
-                <span className="calendar-day__slots" aria-hidden="true">
-                  {date.slots.length} сл.
-                </span>
+                {unavailable ? null : (
+                  <span className="calendar-day__slots" aria-hidden="true">
+                    {date.slots.length} сл.
+                  </span>
+                )}
                 <span className="calendar-day__number">{date.dayNumber}</span>
               </button>
             );

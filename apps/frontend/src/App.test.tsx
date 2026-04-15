@@ -925,6 +925,8 @@ describe("App", () => {
     expect(await screen.findByRole("heading", { name: "Бронирования" })).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Записаться" }));
+    await user.click(screen.getByRole("button", { name: "Стратегическая сессия" }));
+    await user.click(screen.getByRole("button", { name: "Далее" }));
     await user.click(screen.getByRole("button", { name: bookingDay.shortLabel }));
     await user.click(screen.getByRole("button", { name: "10:30" }));
     await user.click(screen.getByRole("button", { name: "Далее" }));
@@ -1008,6 +1010,8 @@ describe("App", () => {
     expect(await screen.findByRole("heading", { name: "Бронирования" })).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Записаться" }));
+    await user.click(screen.getByRole("button", { name: "Стратегическая сессия" }));
+    await user.click(screen.getByRole("button", { name: "Далее" }));
 
     expect(
       await screen.findByRole("heading", { name: "Выберите дату и время" }),
@@ -1133,6 +1137,31 @@ describe("App", () => {
 
     await user.click(screen.getByRole("button", { name: "Вс 19" }));
 
+    expect(
+      screen.getByText("На выбранный день свободных слотов нет. Выберите другую дату."),
+    ).toBeInTheDocument();
+  });
+
+  it("marks zero-slot days as unavailable in the booking flow", () => {
+    render(<App scenario="single" />);
+
+    const unavailableDay = screen.getByRole("button", { name: "Вс 19" });
+
+    expect(unavailableDay).toHaveClass("calendar-day--unavailable");
+    expect(within(unavailableDay).queryByText("0 сл.")).not.toBeInTheDocument();
+  });
+
+  it("keeps unavailable day styling after selecting a zero-slot date", async () => {
+    const user = userEvent.setup();
+
+    render(<App scenario="single" />);
+
+    const unavailableDay = screen.getByRole("button", { name: "Вс 19" });
+
+    await user.click(unavailableDay);
+
+    expect(unavailableDay).toHaveClass("calendar-day--selected");
+    expect(unavailableDay).toHaveClass("calendar-day--unavailable");
     expect(
       screen.getByText("На выбранный день свободных слотов нет. Выберите другую дату."),
     ).toBeInTheDocument();
@@ -1286,6 +1315,19 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: "Далее" }));
 
     expect(screen.getByText("Пятница, 17 апреля")).toBeInTheDocument();
+  });
+
+  it("starts from event type selection when the public filter is not selected", async () => {
+    const user = userEvent.setup();
+
+    render(<App scenario="public" />);
+
+    await user.click(screen.getByRole("button", { name: "Пятница, 17 апреля" }));
+    await user.click(screen.getByRole("button", { name: "Записаться" }));
+
+    expect(screen.getByRole("heading", { name: "Выберите тип встречи" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Выйти из записи" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Выберите дату и время" })).not.toBeInTheDocument();
   });
 
   it("opens the booking flow on date and time when a public event type filter is already selected", async () => {

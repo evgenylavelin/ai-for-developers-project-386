@@ -8,16 +8,10 @@ import type {
 export function deriveEntryState(
   eventTypes: EventType[],
   prefilledEventTypeId?: string,
+  requireExplicitEventTypeSelection = false,
 ): EntryState {
   if (eventTypes.length === 0) {
     return { kind: "unavailable" };
-  }
-
-  if (eventTypes.length === 1) {
-    return {
-      kind: "direct-booking",
-      presetEventType: eventTypes[0],
-    };
   }
 
   const prefilledEventType = eventTypes.find(
@@ -28,6 +22,17 @@ export function deriveEntryState(
     return {
       kind: "prefilled-public-booking",
       presetEventType: prefilledEventType,
+    };
+  }
+
+  if (requireExplicitEventTypeSelection) {
+    return { kind: "choose-event-type" };
+  }
+
+  if (eventTypes.length === 1) {
+    return {
+      kind: "direct-booking",
+      presetEventType: eventTypes[0],
     };
   }
 

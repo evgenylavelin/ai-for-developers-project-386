@@ -125,4 +125,8 @@ describe("mock guest flow fixtures", () => {
     expect(datesByEventType.standard[0].slots).toEqual(["09:00", "10:30", "13:00"]);
     expect(datesByEventType.standard[4].slots).toEqual([]);
   });
+
+  it("forces the event type step when explicit selection is required", () => {
+    expect(deriveEntryState(singleEventType, undefined, true).kind).toBe("choose-event-type");
+  });
 });

@@ -739,6 +739,24 @@ h1 {
   text-align: center;
 }
 
+.calendar-day--unavailable {
+  border-color: rgba(21, 33, 20, 0.18);
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(249, 255, 244, 0.94) 0,
+      rgba(249, 255, 244, 0.94) 10px,
+      rgba(218, 241, 210, 0.76) 10px,
+      rgba(218, 241, 210, 0.76) 20px
+    );
+  box-shadow: inset 0 0 0 1px rgba(21, 33, 20, 0.05);
+}
+
+.calendar-day--unavailable.calendar-day--selected {
+  border-color: var(--color-accent);
+  box-shadow: inset 0 0 0 1px rgba(47, 154, 72, 0.2);
+}
+
 .calendar-day__weekday {
   position: absolute;
   top: 10px;
@@ -758,6 +776,11 @@ h1 {
 .calendar-day__number {
   font-size: 1.5rem;
   line-height: 1.1;
+}
+
+.calendar-day--unavailable .calendar-day__weekday,
+.calendar-day--unavailable .calendar-day__number {
+  color: var(--color-text-secondary);
 }
 
 .slot-button {

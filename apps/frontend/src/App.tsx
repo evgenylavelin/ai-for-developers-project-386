@@ -161,6 +161,8 @@ export default function App({ scenario }: AppProps) {
   const [selectedPublicBookingEventTypeId, setSelectedPublicBookingEventTypeId] = useState<
     string | undefined
   >(undefined);
+  const [requireExplicitBookingEventTypeSelection, setRequireExplicitBookingEventTypeSelection] =
+    useState(false);
 
   useEffect(() => {
     if (!isScenarioMode) {
@@ -191,6 +193,7 @@ export default function App({ scenario }: AppProps) {
     setSelectedHomeDate(getInitialSelectedDate(nextScenarioData.schedule, nextScenarioData.bookings));
     setOwnerSchedule(null);
     setSelectedPublicBookingEventTypeId(undefined);
+    setRequireExplicitBookingEventTypeSelection(false);
   }, [isScenarioMode, scenario]);
 
   useEffect(() => {
@@ -297,6 +300,7 @@ export default function App({ scenario }: AppProps) {
         setSuccessDestination("home");
         setSelectedHomeDate(getInitialSelectedDate(remoteCalendarDays, loadedBookings));
         setSelectedPublicBookingEventTypeId(undefined);
+        setRequireExplicitBookingEventTypeSelection(false);
 
         void getOwnerEventTypes()
           .then((loadedOwnerEventTypes) => {
@@ -619,6 +623,7 @@ export default function App({ scenario }: AppProps) {
                 onStartBooking={({ isoDate, eventTypeId }) => {
                   setSelectedHomeDate(isoDate);
                   setSelectedPublicBookingEventTypeId(eventTypeId);
+                  setRequireExplicitBookingEventTypeSelection(!eventTypeId);
                   setSuccessDestination("home");
                   setScreen("booking");
                 }}
@@ -629,6 +634,7 @@ export default function App({ scenario }: AppProps) {
                 datesByEventType={datesByEventType}
                 initialSelectedDate={selectedHomeDate}
                 initialSelectedEventTypeId={selectedPublicBookingEventTypeId}
+                requireExplicitEventTypeSelection={requireExplicitBookingEventTypeSelection}
                 successActionLabel={
                   successDestination === "home" ? "Вернуться к бронированиям" : undefined
                 }
@@ -649,11 +655,13 @@ export default function App({ scenario }: AppProps) {
                 onSuccessAction={
                   successDestination === "home"
                     ? () => {
+                        setRequireExplicitBookingEventTypeSelection(false);
                         setScreen("home");
                       }
                     : undefined
                 }
                 onExit={() => {
+                  setRequireExplicitBookingEventTypeSelection(false);
                   setScreen("home");
                 }}
               />
